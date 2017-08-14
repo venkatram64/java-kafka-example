@@ -62,3 +62,9 @@ mvn dependency:tree
 
 log.retention.ms
 log.retention.bytes
+
+max.in.flight.requests.per.connection
+
+Custom partiioner
+partitioner.class ="xxx"
+speed.sensor.name="tss"
