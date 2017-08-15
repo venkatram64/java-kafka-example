@@ -22,7 +22,7 @@ public class EmployeeConsumer {
 
     public void consume(){
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");//kafka-1.devos.saccap.int:30031, localhost:9092
+        props.put("bootstrap.servers", "localhost:9092");//xxx.int:30031, localhost:9092
         props.put("group.id", groupName);
         props.put("enable.auto.commit", false);
 
