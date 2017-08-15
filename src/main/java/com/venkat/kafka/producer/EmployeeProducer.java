@@ -1,5 +1,6 @@
 package com.venkat.kafka.producer;
 
+import com.venkat.kafka.config.KafkaDestinationInfo;
 import com.venkat.kafka.model.Employee;
 import org.apache.kafka.clients.producer.*;
 
@@ -12,23 +13,27 @@ import java.util.Properties;
 
 public class EmployeeProducer {
 
-    private String topicName = "topic-1";
+    private Producer<String, Employee> producer;
+    private KafkaDestinationInfo kafkaDestinationInfo;
+
+    public EmployeeProducer(){}
+
+    public EmployeeProducer(KafkaDestinationInfo kafkaDestinationInfo){
+        this.kafkaDestinationInfo = kafkaDestinationInfo;
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaDestinationInfo.getBootstrapServiceConfig());//xxxx.int:30031, localhost:9092
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "com.venkat.kafka.producer.EmployeeSerializer");
+        props.put("acks", "all");
+        this.producer = new KafkaProducer<>(props);
+    }
 
     public void produce(){
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");//kafka-1.devos.saccap.int:30031, localhost:9092
-        props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "com.venkat.kafka.producer.EmployeeSerializer");
-        props.put("acks", "all");
 
-        Producer<String, Employee> producer = new KafkaProducer<>(props);
-
-
-        Employee emp = new Employee("emp-01","Venkatram","venkatram.reddy@point72.com");
+        Employee emp = new Employee("emp-01","Venkatram","venkatram.reddy@gmail.com");
         try{
 
-            // producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(),emp)).get();
-            producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(), emp),
+            producer.send(new ProducerRecord<String, Employee>(this.kafkaDestinationInfo.getTopicName(), emp.getEmpId().toString(), emp),
                     new Callback() {
                         @Override
                         public void onCompletion(RecordMetadata recordMetadata, Exception e) {

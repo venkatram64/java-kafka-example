@@ -1,0 +1,16 @@
+KafkaDestinationSettings:
+  topicName: TestTopic
+  bootstrapServiceConfig: xxx:40041
+  zookeeperUrl: xxx.int:40044
+
+KafkaLocalDestinationSettings:
+  topicName: TestTopic
+  bootstrapServiceConfig: localhost:9092
+  zookeeperUrl: localhost:2181
+
+HBaseSettings:
+  zookeeperQuorum: xxx.int
+  zookeeperPort: 2181
+  hBaseMaster: xxx.int:60000
+  zookeeperZNodeParent: /hbase-unsecure
+  zookeeperAdmin: xxx

@@ -1,6 +1,8 @@
 package com.venkat.kafka.consumer;
 
+import com.venkat.kafka.config.KafkaDestinationInfo;
 import com.venkat.kafka.model.Employee;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -15,23 +17,28 @@ import java.util.Properties;
 
 public class EmployeeConsumer {
 
-    private String topicName = "topic-1";
     private String groupName ="MyTest";
+    private KafkaDestinationInfo kafkaDestinationInfo;
+    private  KafkaConsumer<String, Employee> consumer;
 
+    public EmployeeConsumer(){}
 
+    public EmployeeConsumer(KafkaDestinationInfo kafkaDestinationInfo){
 
-    public void consume(){
+        this.kafkaDestinationInfo = kafkaDestinationInfo;
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");//kafka-1.devos.saccap.int:30031, localhost:9092
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.kafkaDestinationInfo.getBootstrapServiceConfig());//xxxx.int:30031, localhost:9092
         props.put("group.id", groupName);
         props.put("enable.auto.commit", false);
 
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "com.venkat.kafka.consumer.EmployeeDeserializer");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "com.venkat.kafka.consumer.EmployeeDeserializer");
 
+        this.consumer = new KafkaConsumer<>(props);
+    }
+    public void consume(){
 
-        KafkaConsumer<String, Employee> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList(topicName));
+        consumer.subscribe(Arrays.asList(this.kafkaDestinationInfo.getTopicName()));
         try{
             while(true){
                 ConsumerRecords<String, Employee> records = consumer.poll(1000);
