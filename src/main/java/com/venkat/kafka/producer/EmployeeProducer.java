@@ -19,7 +19,9 @@ public class EmployeeProducer {
         props.put("bootstrap.servers", "localhost:9092");//xxx:30031, localhost:9092
         props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "com.venkat.kafka.producer.EmployeeSerializer");
-        props.put("acks", "all");
+        props.put("acks", "all"); //for acknowledgement 0, 1, all
+        //retries
+        //max.in.flight.requests.per.connection 1
 
         Producer<String, Employee> producer = new KafkaProducer<>(props);
 

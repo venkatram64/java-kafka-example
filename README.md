@@ -68,3 +68,15 @@ max.in.flight.requests.per.connection
 Custom partiioner
 partitioner.class ="xxx"
 speed.sensor.name="tss"
+
+
+step 1: https://github.com/ldaniels528/trifecta/releases
+
+step 2: create a dir ".trifecta" in Users
+
+step 3: To run the trifecta, create config.properties file in ".trifecta" dir and add the following
+trifecta.zookeeper.host=localhost:2181
+
+step 4: go to trifecta dir run the following command
+
+java -cp lib* play.core.server.ProdServerStart
