@@ -22,17 +22,18 @@ public class EmployeeService {
     @PostConstruct
     public void process(){
 
-        EmployeeProducer employeeProducer = new EmployeeProducer(kafkaDestinationInfo);
-        employeeProducer.produce();
+        EmployeeConsumer employeeConsumer = new EmployeeConsumer();
+        employeeConsumer.consume();
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        EmployeeConsumer employeeConsumer = new EmployeeConsumer(kafkaDestinationInfo);
-        employeeConsumer.consume();
+
+        EmployeeProducer employeeProducer = new EmployeeProducer();
+        employeeProducer.produce();
 
     }
 }
