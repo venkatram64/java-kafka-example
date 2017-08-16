@@ -22,8 +22,8 @@ public class EmployeeService {
     @PostConstruct
     public void process(){
 
-        EmployeeConsumer employeeConsumer = new EmployeeConsumer();
-        employeeConsumer.consume();
+        EmployeeProducer employeeProducer = new EmployeeProducer();
+        employeeProducer.produce();
 
         try {
             Thread.sleep(1000);
@@ -31,9 +31,9 @@ public class EmployeeService {
             e.printStackTrace();
         }
 
+        EmployeeConsumer employeeConsumer = new EmployeeConsumer();
+        employeeConsumer.consume();
 
-        EmployeeProducer employeeProducer = new EmployeeProducer();
-        employeeProducer.produce();
 
     }
 }

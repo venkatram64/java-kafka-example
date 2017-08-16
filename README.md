@@ -80,3 +80,5 @@ trifecta.zookeeper.host=localhost:2181
 step 4: go to trifecta dir run the following command
 
 java -cp lib* play.core.server.ProdServerStart
+
+https://github.com/jkutner/heroku-metrics-spring

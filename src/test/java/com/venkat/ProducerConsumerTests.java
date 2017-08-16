@@ -1,4 +1,4 @@
-package com.venkat.jsongen;
+package com.venkat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

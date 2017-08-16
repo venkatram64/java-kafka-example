@@ -1,5 +1,6 @@
 package com.venkat.kafka.producer;
 
+import com.venkat.kafka.config.KafkaDestinationInfo;
 import com.venkat.kafka.model.Employee;
 import org.apache.kafka.clients.producer.*;
 
@@ -13,8 +14,9 @@ import java.util.Properties;
 public class EmployeeProducer {
 
     private String topicName = "topic-1";
+    Producer<String, Employee> producer;
 
-    public void produce(){
+    public EmployeeProducer(){
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");//xxx:30031, localhost:9092
         props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
@@ -22,15 +24,28 @@ public class EmployeeProducer {
         props.put("acks", "all"); //for acknowledgement 0, 1, all
         //retries
         //max.in.flight.requests.per.connection 1
+        producer = new KafkaProducer<>(props);
+    }
 
-        Producer<String, Employee> producer = new KafkaProducer<>(props);
+    public EmployeeProducer(KafkaDestinationInfo kafkaDestinationInfo){
 
+        this.topicName = kafkaDestinationInfo.getTopicName();
+        Properties props = new Properties();
+        props.put("bootstrap.servers", kafkaDestinationInfo.getBootstrapServiceConfig());//xxx:30031, localhost:9092
+        props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "com.venkat.kafka.producer.EmployeeSerializer");
+        props.put("acks", "all"); //for acknowledgement 0, 1, all
+        //retries
+        //max.in.flight.requests.per.connection 1
+        this.producer = new KafkaProducer<>(props);
+    }
+
+    public void produce(){
 
         Employee emp = new Employee("emp-01","Venkatram","venkatram.reddy@gmail.com");
         try{
-
             // producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(),emp)).get();
-            producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(), emp),
+            this.producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(), emp),
                     new Callback() {
                         @Override
                         public void onCompletion(RecordMetadata recordMetadata, Exception e) {
@@ -45,8 +60,8 @@ public class EmployeeProducer {
         }catch(Exception ex){
             ex.printStackTrace();
         }finally {
-            producer.flush();
-            producer.close();
+            this.producer.flush();
+            this.producer.close();
         }
     }
 
