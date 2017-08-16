@@ -81,4 +81,11 @@ step 4: go to trifecta dir run the following command
 
 java -cp lib* play.core.server.ProdServerStart
 
+or goto bin dir run the bat file
+
 https://github.com/jkutner/heroku-metrics-spring
+
+netstat -a -n -o
+
+taskkill /F /pid <port number>
+netstat -nao | find "9092"

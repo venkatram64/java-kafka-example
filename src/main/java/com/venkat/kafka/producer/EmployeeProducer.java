@@ -42,7 +42,7 @@ public class EmployeeProducer {
 
     public void produce(){
 
-        Employee emp = new Employee("emp-01","Venkatram","venkatram.reddy@gmail.com");
+        Employee emp = new Employee("emp-03","Sreedhar","sreedhar.gattu@gmail.com");
         try{
             // producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(),emp)).get();
             this.producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(), emp),
@@ -61,7 +61,7 @@ public class EmployeeProducer {
             ex.printStackTrace();
         }finally {
             this.producer.flush();
-            this.producer.close();
+            //this.producer.close();
         }
     }
 

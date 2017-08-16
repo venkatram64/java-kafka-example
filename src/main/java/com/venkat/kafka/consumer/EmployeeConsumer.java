@@ -27,7 +27,7 @@ public class EmployeeConsumer {
         props.put("bootstrap.servers", "localhost:9092");//xxx.int:30031, localhost:9092
         props.put("group.id", groupName);
         props.put("enable.auto.commit", false);
-        props.put("auto.commit.interval.ms", 100);
+        //props.put("auto.commit.interval.ms", 100);
 
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "com.venkat.kafka.consumer.EmployeeDeserializer");
@@ -53,6 +53,7 @@ public class EmployeeConsumer {
     public void consume(){
 
         this.consumer.subscribe(Arrays.asList(topicName));
+        //consumer.seekToBeginning();
         try{
             while(true){
                 ConsumerRecords<String, Employee> records = consumer.poll(100);
