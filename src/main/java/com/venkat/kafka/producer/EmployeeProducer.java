@@ -42,7 +42,7 @@ public class EmployeeProducer {
 
     public void produce(){
 
-        Employee emp = new Employee("emp-03","Sreedhar","sreedhar.gattu@gmail.com");
+        Employee emp = new Employee("emp-02","Srijan","srijan.veerareddy@gmail.com");
         try{
             // producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(),emp)).get();
             this.producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(), emp),

@@ -14,3 +14,16 @@ HBaseSettings:
   hBaseMaster: xxx.int:60000
   zookeeperZNodeParent: /hbase-unsecure
   zookeeperAdmin: xxx
+
+TopicTemplate:
+  title: TopicConfig for testing
+  recreateTopic: true
+  topicDefinition:
+    topicPrefix: my
+    partitions: 12
+    replicas: 1
+    kafkaConfig:
+      delete.retention.ms: 3600000
+      cleanup.policy:compact
+      min.compaction.lag.ms: 0
+      segment.ms: 3600000

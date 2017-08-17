@@ -144,6 +144,7 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.8.9</version>
+
 		</dependency>
 
 		<!-- Log4J -->
@@ -161,11 +162,11 @@
 		</dependency>-->
 
 		<!-- Apache Commons Logging -->
-		<dependency>
+		<!--<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>${apache.commons.logging.version}</version>
-		</dependency>
+		</dependency>-->
 
 		<!-- Junit -->
 		<dependency>
@@ -173,7 +174,25 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.curator/curator-test -->
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-test</artifactId>
+			<version>2.12.0</version>
+			<scope>test</scope>
+
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.charithe/kafka-junit -->
+		<!--<dependency>
+			<groupId>com.github.charithe</groupId>
+			<artifactId>kafka-junit</artifactId>
+			<version>3.0.4</version>
+			<scope>test</scope>
+		</dependency>-->
 
 
 	</dependencies>

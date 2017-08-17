@@ -2,6 +2,7 @@ package com.venkat.kafka.consumer;
 
 import com.venkat.kafka.config.KafkaDestinationInfo;
 import com.venkat.kafka.model.Employee;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -42,6 +43,7 @@ public class EmployeeConsumer {
         props.put("bootstrap.servers", kafkaDestinationInfo.getBootstrapServiceConfig());//xxx.int:30031, localhost:9092
         props.put("group.id", groupName);
         props.put("enable.auto.commit", false);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         //props.put("auto.commit.interval.ms", 100);
 
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
