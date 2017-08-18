@@ -10,8 +10,15 @@ import kafka.utils.ZKStringSerializer$;
 import kafka.utils.ZkUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.network.ListenerName;
 import org.apache.kafka.common.protocol.SecurityProtocol;
+import org.apache.kafka.common.record.Record;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.utils.Time;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
@@ -19,7 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.locks.Condition;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by venkatram.veerareddy on 8/17/2017.
@@ -96,6 +106,7 @@ public class KafkaEmbedded {
     }
 
     public void createTopic(String topic, int partitions, int replication, Properties properties){
+
         log.info("Creating topic {name: {}, partitions: {}, replication: {}, config: {}}", topic, partitions, replication);
         ZkClient zkClient = new ZkClient(zookeeperConnect(), DEFAULT_ZK_SESSION_TIMEOUT_MS, DEFAULT_ZK_CONNECTION_TIMEOUT_MS, ZKStringSerializer$.MODULE$);
         boolean isSecure = false;
@@ -104,5 +115,37 @@ public class KafkaEmbedded {
         zkClient.close();
     }
 
+    public KafkaConsumer<Record, Record> getConfig(String serversConfig){
+
+        Properties properties = new Properties();
+        properties.put("enable.auto.commit", "false");
+        properties.put("request.timeout.ms", 20000);
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serversConfig);
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        return new KafkaConsumer<Record, Record>(properties);
+    }
+
+    public ZkUtils getZkUtils(){
+
+        ZkClient zkClient = new ZkClient(zookeeperConnect());
+        zkClient.setZkSerializer(ZKStringSerializer$.MODULE$);
+        return new ZkUtils(zkClient, new ZkConnection(zookeeperConnect()),false);
+    }
+
+    public long getCountFor(String topic, String serversConfig){
+
+        KafkaConsumer<Record, Record> consumer = getConfig(serversConfig);
+        List<PartitionInfo> partitionInfos = consumer.partitionsFor(topic);
+        List<TopicPartition> partitions = partitionInfos.stream()
+                .map(p -> new TopicPartition(topic, p.partition()))
+                .collect(Collectors.toList());
+        consumer.assign(partitions);
+        consumer.seekToEnd(Collections.emptySet());
+        Map<TopicPartition, Long> endPartitions = partitions.stream()
+                .collect(Collectors.toMap(Function.identity(), consumer::position));
+        consumer.seekToBeginning(Collections.emptyList());
+        return partitions.stream().mapToLong(p -> endPartitions.get(p) - consumer.position(p)).sum();
+    }
 
 }

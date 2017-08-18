@@ -1,5 +1,9 @@
 package com.venkat.kafka.embedded;
 
+import kafka.utils.ZKStringSerializer$;
+import kafka.utils.ZkUtils;
+import org.I0Itec.zkclient.ZkClient;
+import org.I0Itec.zkclient.ZkConnection;
 import org.apache.curator.test.TestingServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,5 +36,7 @@ public class ZooKeeperEmbedded {
         //server:1:2:3 -> server:1:2
         return connectString().substring(0,connectString().lastIndexOf(':'));
     }
+
+
 
 }

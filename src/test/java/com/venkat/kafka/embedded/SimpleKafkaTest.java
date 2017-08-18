@@ -17,7 +17,6 @@ public class SimpleKafkaTest extends BaseEmbeddedKafkaTest {
 
     @Before
     public void beforeTest() throws Exception{
-        super.before();
         kafkaDestinationInfo = new KafkaDestinationInfo(broker.brokerList(), zooKeeperEmbedded.connectString() , "myTopic");
         publishDataOnTopic();
     }
@@ -27,10 +26,6 @@ public class SimpleKafkaTest extends BaseEmbeddedKafkaTest {
         ep.produce();
     }
 
-    @After
-    public void afterTest(){
-        super.after();
-    }
 
     @Test
     public void testConsumer(){
