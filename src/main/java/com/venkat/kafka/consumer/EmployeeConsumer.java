@@ -17,7 +17,7 @@ import java.util.Properties;
 
 public class EmployeeConsumer {
 
-    private String topicName = "topic-1";
+    private String topicName = "second_topic";
     private String groupName ="MyTest";
 
     KafkaConsumer<String, Employee> consumer;
@@ -25,13 +25,14 @@ public class EmployeeConsumer {
     public EmployeeConsumer(){
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");//xxx.int:30031, localhost:9092
+        props.put("bootstrap.servers", "192.168.99.100:9092");//xxx.int:30031, localhost:9092
         props.put("group.id", groupName);
         props.put("enable.auto.commit", false);
         //props.put("auto.commit.interval.ms", 100);
 
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "com.venkat.kafka.consumer.EmployeeDeserializer");
+        //props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         consumer = new KafkaConsumer<>(props);
     }
@@ -61,6 +62,7 @@ public class EmployeeConsumer {
                 ConsumerRecords<String, Employee> records = consumer.poll(100);
                 for(ConsumerRecord<String, Employee> rec: records){
                     System.out.println(" employee info " + rec.value().getEmpId() +", " + rec.value().getEmpName() + ", " + rec.value().getEmail());
+                    System.out.println(" value, key, offset, partition and topic " + rec.value() +", " + rec.key() + ", " + rec.offset() + ", " + rec.partition() + ", " + rec.topic() );
                 }
             }
         }catch(Exception ex){

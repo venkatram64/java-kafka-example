@@ -13,12 +13,12 @@ import java.util.Properties;
 
 public class EmployeeProducer {
 
-    private String topicName = "topic-1";
+    private String topicName = "second_topic";
     Producer<String, Employee> producer;
 
     public EmployeeProducer(){
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");//xxx:30031, localhost:9092
+        props.put("bootstrap.servers", "192.168.99.100:9092");//xxx:30031, localhost:9092
         props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "com.venkat.kafka.producer.EmployeeSerializer");
         props.put("acks", "all"); //for acknowledgement 0, 1, all
@@ -42,7 +42,7 @@ public class EmployeeProducer {
 
     public void produce(){
 
-        Employee emp = new Employee("emp-02","Srijan","srijan.veerareddy@gmail.com");
+        Employee emp = new Employee("emp-03","Ram","ram.veerareddy@gmail.com");
         try{
             // producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(),emp)).get();
             this.producer.send(new ProducerRecord<String, Employee>(topicName, emp.getEmpId().toString(), emp),

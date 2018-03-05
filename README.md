@@ -31,7 +31,7 @@ C:\Venkatram\kafka\kafka_2.10-0.10.2.1\bin\windows>kafka-server-start.bat ..\..\
 
 step 3. creating a topic (topic managment tool)
 
-	bin/kafka-topics.bat --zookeeper localhost:2181 --create --topic test --partitions 1 --replication-factor 1
+	bin/windows/kafka-topics.bat --zookeeper localhost:2181 --create --topic test --partitions 1 --replication-factor 1
 
 C:\Venkatram\kafka\kafka_2.10-0.10.2.1\bin\windows>kafka-topics.bat --zookeeper localhost:2181 --create --topic TestTopic --partitions 1 --replication-factor 1
 
@@ -39,7 +39,7 @@ C:\Venkatram\kafka\kafka_2.10-0.10.2.1\bin\windows>kafka-topics.bat --zookeeper 
 step 4. To see the topics
 
     bin/kafka-topics.bat --zookeeper localhost:2181 --describe --topic TestTopic
-	bin/kafka-topics.bat --list --zookeeper localhost:2181
+	bin/windows/kafka-topics.bat --list --zookeeper localhost:2181
 
 step 5. Send some messages
 
@@ -89,3 +89,98 @@ netstat -a -n -o
 
 taskkill /F /pid <port number>
 netstat -nao | find "9092"
+
+*********************************************************
+step1: start the zookeeper server
+
+D:\freelance-work\kafka_2.11-0.11.0.0>  bin\windows\zookeeper-server-start.bat config\zookeeper.propertie
+
+step2: start the kafka server(kafka broker)
+
+D:\freelance-work\kafka_2.11-0.11.0.0>  bin\windows\kafka-server-start.bat config\server.properties
+
+step3:
+
+to see the topics: start the following command
+
+D:\trifecta\bin> trifecta-ui.bat
+http://localhost:9000/
+
+****************************
+C:\Users\<username>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker
+
+docker installation on windows 10
+
+1. your IP will be 192.168.99.100
+2. The docker machine that ships with Docker Toolbox comes with only 2GB of RAM,
+which is not enough for Kafka. You need to increase it to 4GB (at least)
+by running the following commands:
+
+docker-machine rm default
+docker-machine create -d virtualbox --virtualbox-memory=4096 --virtualbox-cpu-count=2 default
+
+3. Run the command
+
+docker-machine env default --shell cmd
+
+or
+
+docker-machine env default --shell powershell
+
+4. In a new command prompt, paste the output from the command above into the terminal
+
+!!!! MAKE SURE TO COPY YOUR OUTPUT, NOT THE CODE BELOW !!!!
+set DOCKER_TLS_VERIFY=1
+set DOCKER_HOST=tcp://192.168.99.100:2376
+set DOCKER_CERT_PATH=...
+set DOCKER_MACHINE_NAME=default
+
+************************************
+
+# Docker for Mac >= 1.12, Linux, Docker for Windows 10
+docker run --rm -it \
+           -p 2181:2181 -p 3030:3030 -p 8081:8081 \
+           -p 8082:8082 -p 8083:8083 -p 9092:9092 \
+           -e ADV_HOST=127.0.0.1 \
+           landoop/fast-data-dev
+
+# Docker toolbox
+docker run --rm -it \
+          -p 2181:2181 -p 3030:3030 -p 8081:8081 \
+          -p 8082:8082 -p 8083:8083 -p 9092:9092 \
+          -e ADV_HOST=192.168.99.100 \
+          landoop/fast-data-dev
+
+# Kafka command lines tools
+docker run --rm -it --net=host landoop/fast-data-dev bash
+
+Create topic
+
+kafka-topics --zookeeper 192.168.99.100:2181 --create --topic first_topic --partitions 1 --replication-factor 1
+
+To list topic
+
+kafka-topics --zookeeper 192.168.99.100:2181 --list
+
+To delete topic
+
+kafka-topics --zookeeper 192.168.99.100:2181 --delete --topic first_topic
+
+To describe topic
+
+kafka-topics --zookeeper 192.168.99.100:2181 --describe --topic first_topic
+To send messages
+
+kafka-console-producer --broker-list 192.168.99.100:9092 --topic first_topic
+
+To receive messages
+
+kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topic
+
+To receive messages
+
+kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topic --from-begining
+
+To receive messages from commiit
+
+kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topic --consumer-property group.id=mygroup --from-begining
