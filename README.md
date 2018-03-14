@@ -151,12 +151,17 @@ docker run --rm -it \
           -e ADV_HOST=192.168.99.100 \
           landoop/fast-data-dev
 
-# Kafka command lines tools
+# Kafka command lines tools(run following command to create the topics)
 docker run --rm -it --net=host landoop/fast-data-dev bash
+
+to see the UI http://192.168.99.100:3030/
 
 Create topic
 
-kafka-topics --zookeeper 192.168.99.100:2181 --create --topic first_topic --partitions 1 --replication-factor 1
+kafka-topics --zookeeper 192.168.99.100:2181 --create --topic first_topic --partitions 3 --replication-factor 1
+
+kafka-topics --zookeeper 192.168.99.100:2181 --create --topic test_topic --partitions 3 --replication -factor 1 --config cleanup.policy=compact
+
 
 To list topic
 
@@ -184,3 +189,47 @@ kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topi
 To receive messages from commiit
 
 kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topic --consumer-property group.id=mygroup --from-begining
+
+
+docker ps
+
+docker exec -it 515a7b91e6a4 tail -f /var/log/broker.log
+
+log compaction:
+first run the :
+docker run --rm -it --net=host landoop/fast-data-dev bash
+case 1: create topic
+kafka-topics --zookeeper 192.168.99.100:2181 --create \
+ --topic employee-salary-compact \
+ --partitions 1 --replication-factor 1\
+ --config cleanup.policy=compact \
+ --config min.cleanable.dirty.ratio=0.005 \
+ --config segment.ms=100000
+
+case 2 : run the following command
+ kafka-console-consumer --bootstrap-server 192.168.99.100:9092 \
+ --topic employee-salary-compact \
+ --from-beginning \
+ --property print.key=true \
+ --property key.separator=,
+case 3 : run the following command
+  kafka-console-producer --broker-list 192.168.99.100:9092 \
+  --topic employee-salary-compact \
+  --property parse.key=true \
+  --property key.separator=,
+
+paste below messages in producer console:
+
+123,{"Venkatram":"1000000"}
+124,{"Veerareddy":"12121566"}
+125,{"Srijan":"90987666"}
+
+1231,{"Lisa":"123123123"}
+1242,{"Feema":"12121566"}
+1253,{"Srijan":"90987666009"}
+
+123,{"Venkatram":"100000234"}
+124,{"Veerareddy":"1212001566"}
+
+
+
