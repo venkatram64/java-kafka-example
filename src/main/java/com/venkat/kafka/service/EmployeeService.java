@@ -2,6 +2,7 @@ package com.venkat.kafka.service;
 
 import com.venkat.kafka.config.KafkaDestinationInfo;
 import com.venkat.kafka.consumer.EmployeeConsumer;
+import com.venkat.kafka.model.Employee;
 import com.venkat.kafka.producer.EmployeeProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
