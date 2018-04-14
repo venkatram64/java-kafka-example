@@ -182,6 +182,8 @@ To receive messages
 
 kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topic
 
+kafka-console-consumer --bootstrap-server localhost:9092 --topic nifi_topic
+
 To receive messages
 
 kafka-console-consumer --bootstrap-server 192.168.99.100:9092 --topic first_topic --from-begining
