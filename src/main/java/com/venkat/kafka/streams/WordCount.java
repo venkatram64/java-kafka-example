@@ -47,7 +47,7 @@ public class WordCount {
         KStream<String, String> wordCountInput = builder.stream("word-count-input");//topic name
 
         KTable<String, Long> wordCount = wordCountInput.mapValues(line -> line.toLowerCase())
-                .flatMapValues(line -> Arrays.asList(line.split(" ")))
+                .flatMapValues(line -> Arrays.asList(line.split("\\w+"))) //space  or "\\s+"
                 .selectKey((k, v) -> v)
                 .groupByKey()
                 .count("Count");

@@ -12,6 +12,18 @@ import org.apache.kafka.streams.kstream.KTable;
 import java.util.Arrays;
 import java.util.Properties;
 
+
+/**
+ * What is exactly once?
+
+ Exactly once is the ability to guarantee that data processing on each message will happen
+ only once, and that pushing the message back to kafka will also happen effectively only
+ once(kafka will de-dup)
+
+ Guaranteed when both input and output system is Kafka, not for Kafk to any external
+ systems
+ */
+
 public class FavouriteColor {
 
     /*

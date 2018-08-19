@@ -17,7 +17,7 @@ public class EmployeeProducer {
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();
 
-    private String topicName = "nifi-topic";
+    private String topicName = "testForReblance";
     Producer<String, Employee> producer;
 
     public EmployeeProducer(){
